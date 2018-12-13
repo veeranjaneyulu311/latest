@@ -1,0 +1,48 @@
+mapping:
+-------
+{
+  "mappings": {
+    "hotel" : {
+      "properties" : {
+        "name" : { "type" : "string" },
+        "city" : { "type" : "string" },
+        "name_suggest" : {
+          "type" :     "completion"
+        }
+      } 
+    }
+  }
+}
+
+request:[index=hotels]
+-------
+{
+  "hotels" : {
+    "text" : "m",
+    "completion" : {
+      "field" : "name_suggest"
+    }
+  }
+}
+
+
+response:
+--------
+"hotels" : [ 
+  {
+    "text" : "m",
+    "offset" : 0,
+    "length" : 1,
+    "options" : [ 
+      {
+        "text" : "Mercure Hotel Munich",
+        "score" : 1.0
+      } 
+    ]
+  }
+]
+ 
+https://www.elastic.co/blog/you-complete-me
+https://www.elastic.co/guide/en/elasticsearch/reference/current/search-suggesters-completion.html
+https://hackernoon.com/elasticsearch-using-completion-suggester-to-build-autocomplete-e9c120cf6d87
+https://tw.saowen.com/a/c29b1724a7b0c8003de3b2cfe213d6ffc3c3e8d3338ba1e4b8ca3953fa82ee4b

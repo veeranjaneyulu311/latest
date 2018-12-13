@@ -1,0 +1,12 @@
+hibernate contains two files:
+1.mapping file
+2.configuration file
+
+
+mapping file elements:
+----------------------
+note:: file name should be "persistance_class_name.hbm.xml"
+
+<hibernate-mapping>
+<class>
+<id>

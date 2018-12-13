@@ -1,0 +1,60 @@
+#!/bin/sh
+SERVICE_NAME=catalog
+PATH_TO_JAR=/opt/app/settings-0.0.1.jar
+PID_PATH_NAME=/tmp/catalogmodule-pid
+
+. /etc/init.d/env
+case $1 in
+    start)
+        echo "Starting $SERVICE_NAME ..."
+        if [ ! -f $PID_PATH_NAME ]; then
+            nohup java -Dspring.datasource.url=jdbc:postgresql://$DB_IP:$DB_PORT/drucare_qa  -Dserver.ssl.key-store=/opt/app/certs/keystore.p12 -Dserver.ssl.key-store-password=venkat.t -Dserver.ssl.keyStoreType=PKCS12 -Dserver.ssl.keyAlias=tomcat -jar $PATH_TO_JAR /tmp 2>> /dev/null >> /dev/null &
+                        echo $! > $PID_PATH_NAME
+            echo "$SERVICE_NAME started ..."
+        else
+            echo "$SERVICE_NAME is already running ..."
+        fi
+    ;;
+    stop)
+        if [ -f $PID_PATH_NAME ]; then
+            PID=$(cat $PID_PATH_NAME);
+            echo "$SERVICE_NAME stoping ..."
+            kill $PID;
+            echo "$SERVICE_NAME stopped ..."
+            rm $PID_PATH_NAME
+        else
+            echo "$SERVICE_NAME is not running ..."
+        fi
+    ;;
+    restart)
+        if [ -f $PID_PATH_NAME ]; then
+            PID=$(cat $PID_PATH_NAME);
+            echo "$SERVICE_NAME stopping ...";
+            kill $PID;
+            echo "$SERVICE_NAME stopped ...";
+            rm $PID_PATH_NAME
+            echo "$SERVICE_NAME starting ..."
+            nohup java -Dserver.ssl.key-store=/opt/app/certs/keystore.p12 -Dserver.ssl.key-store-password=venkat.t -Dserver.ssl.keyStoreType=PKCS12 -Dserver.ssl.keyAlias=tomcat  -jar $PATH_TO_JAR /tmp 2>> /dev/null >> /dev/null &
+                        echo $! > $PID_PATH_NAME
+            echo "$SERVICE_NAME started ..."
+        else
+            echo "$SERVICE_NAME is not running ..."
+        fi
+    ;;
+esac
+
+=================================================================================================================================================================
+env:1a
+------
+export SERVER_IP=10.0.6.125
+export SEND_EMAIL_URL=$SERVER_IP
+export SEND_SMS_URL=$SERVER_IP
+export SEND_TEMPLATE_EMAIL_URL=$SERVER_IP
+export WEBSITE_IP=10.0.2.120
+export OPD_SERVER_IP=appqa.nv01.api.dru.care
+export DB_IP=10.0.7.78
+export DB_PORT=3388
+~
+
+env:1b:
+-------
